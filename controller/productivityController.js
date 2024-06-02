@@ -49,7 +49,7 @@ const checkReminders = async () => {
 
     console.log(reminders[0].dataValues.title);
 
-    for (const reminder of reminders) {
+    for (const reminder of reminders) {  
       // Call your API here using axios
       await axios.post(`http://${ESP8266_IP}/command`, { reminder:reminders[0].dataValues.title });
 
