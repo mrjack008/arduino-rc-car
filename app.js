@@ -31,7 +31,7 @@ connectToPostgres()
 app.use(cors());
 // Set up CORS middleware with specific origin
 app.use(cors({
-    origin: 'https://rc.perfviz.com' // Replace with your allowed origin
+    origin: 'http://localhost:3000' // Replace with your allowed origin
   }));
   
 

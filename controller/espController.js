@@ -1,17 +1,27 @@
 // controllers/espController.js
-const axios = require('axios');
+const mqtt = require('mqtt');
 
-const ESP8266_IP = '192.168.16.91'; // Replace with your ESP8266's IP address
+const mqttBrokerUrl = 'mqtt://test.mosquitto.org'; // MQTT broker URL
+const topic = 'razalcar/control'; // MQTT topic
 
-exports.sendCommand = async (req, res) => {
+// Connect to the MQTT broker
+const mqttClient = mqtt.connect(mqttBrokerUrl);
+
+mqttClient.on('connect', () => {
+  console.log('Connected to MQTT broker'); 
+});
+
+exports.sendCommand = (req, res) => {
   const command = req.body.command;
   console.log(`Command received: ${command}`);
-  
-  try {
-    const response = await axios.post(`http://${ESP8266_IP}/command`, { command });
+
+  const message = JSON.stringify({ command });
+
+  mqttClient.publish(topic, message, (err) => {
+    if (err) {
+      console.error('Failed to send command:', err);
+      return res.status(500).send('Failed to send command');
+    }
     res.status(200).send('Command sent');
-  } catch (error) {
-    console.error('Failed to send command:', error);
-    res.status(500).send('Failed to send command');
-  }
+  });
 };
